@@ -14,6 +14,10 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
+import * as imgErrors from '@/directives'
+Object.keys(imgErrors).forEach(ele => {
+  Vue.directive(ele, imgErrors[ele])
+})
 
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })

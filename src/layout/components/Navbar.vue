@@ -10,8 +10,8 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img src="http://destiny001.gitee.io/image/monkey_02.jpg" class="user-avatar">
-          <span>用户名</span>
+          <img v-imgError="defaultImg" :src="staffPhoto" class="user-avatar">
+          <span>{{ name }}</span>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -33,16 +33,23 @@
 import { mapGetters } from 'vuex'
 // import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-
+import defaultImg from '@/assets/common/head.jpg'
 export default {
   components: {
     // Breadcrumb,
     Hamburger
   },
+  data() {
+    return {
+      defaultImg: defaultImg
+    }
+  },
   computed: {
     ...mapGetters([
       'sidebar',
-      'avatar'
+      'avatar',
+      'name',
+      'staffPhoto'
     ])
   },
   methods: {
@@ -58,6 +65,31 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.avatar-container {
+      margin-right: 30px;
+      .avatar-wrapper {
+        position: relative;
+        // 开启flex
+        display: flex;
+        align-items: center;
+        color: #fff;
+
+        .user-avatar {
+          cursor: pointer;
+          width: 40px;
+          height: 40px;
+          border-radius: 10px;
+          margin-right: 8px;
+        }
+        .el-icon-caret-bottom {
+          cursor: pointer;
+          position: absolute;
+          right: -20px;
+          top: 18px;
+          font-size: 12px;
+        }
+      }
+    }
 .navbar {
   height: 50px;
   overflow: hidden;
@@ -114,7 +146,6 @@ export default {
       margin-right: 30px;
 
       .avatar-wrapper {
-        margin-top: 5px;
         position: relative;
 
         .user-avatar {

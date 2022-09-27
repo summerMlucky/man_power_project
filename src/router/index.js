@@ -1,11 +1,18 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
+import approvalsRoute from './modules/approvals'
+import attendancesRoute from './modules/attendances'
+import departmentsRoute from './modules/departments'
+import employeesRoute from './modules/employees'
+import permissionRoute from './modules/permission'
+import salarysRoute from './modules/salarys'
+import settingRoute from './modules/setting'
+import socialRoute from './modules/social'
 Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
-
+const asyncRoutes = [approvalsRoute, attendancesRoute, departmentsRoute, employeesRoute, permissionRoute, salarysRoute, settingRoute, socialRoute]
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -51,7 +58,7 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
+      meta: { title: '首页', icon: 'dashboard' }
     }]
   },
   // 404 page must be placed at the end !!!
@@ -61,7 +68,7 @@ export const constantRoutes = [
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
+  routes: [...constantRoutes, ...asyncRoutes]
 })
 
 const router = createRouter()

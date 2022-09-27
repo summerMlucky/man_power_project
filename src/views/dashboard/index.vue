@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-text">name: {{ name }}</div>
-    <svg-icon iconClass='eye'></svg-icon>
+    <svg-icon icon-class="eye" />
   </div>
 </template>
 

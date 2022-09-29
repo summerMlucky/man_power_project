@@ -28,7 +28,6 @@ export default {
     async loginAction({ commit }, loginData) {
       const data = await login(loginData)
       commit('SET_HRSAAS_TIME', new Date().getTime())
-      console.log(data)
       commit('SET_TOKEN', data)
     },
     async getUserInfo({ commit }) {

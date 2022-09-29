@@ -33,7 +33,7 @@ service.interceptors.response.use(response => {
   // 3.没有成功 Promise.reject 抛出错误
   const { data, success, message } = response.data
   if (success) { // 业务逻辑成功 data为token
-    console.log(data)
+    // console.log(data)
     return data
   }
   // 业务没有成功

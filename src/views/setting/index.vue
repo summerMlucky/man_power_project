@@ -30,13 +30,36 @@
               label="操作"
               width="240"
             >
-              <el-button size="small" type="success">分配权限</el-button>
-              <el-button size="small" type="primary">编辑</el-button>
-              <el-button size="small" type="danger">删除</el-button>
+              <template slot-scope="{row}">
+                <el-button size="small" type="success">分配权限</el-button>
+                <el-button size="small" type="primary" @click="editRole(row)">编辑</el-button>
+                <el-button size="small" type="danger" @click="deleRole(row.id)">删除</el-button>
+              </template>
             </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane label="公司信息" name="second">配置管理</el-tab-pane>
+        <el-tab-pane label="公司信息" name="second">
+          <el-alert
+            title="对公司名称、公司地址、营业执照、公司地区的更新，将使得公司资料被重新审核，请谨慎修改"
+            type="info"
+            show-icon
+            :closable="false"
+          />
+          <el-form label-width="120px" style="margin-top:50px">
+            <el-form-item label="公司名称">
+              <el-input v-model="companyInfo.name" disabled style="width:400px" />
+            </el-form-item>
+            <el-form-item label="公司地址">
+              <el-input v-model="companyInfo.companyAddress" disabled style="width:400px" />
+            </el-form-item>
+            <el-form-item label="邮箱">
+              <el-input v-model="companyInfo.mailbox" disabled style="width:400px" />
+            </el-form-item>
+            <el-form-item label="备注">
+              <el-input v-model="companyInfo.remarks" type="textarea" :rows="3" disabled style="width:400px" />
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
       </el-tabs>
     </el-card>
     <el-row type="flex" justify="end" align="middle" style="height: 60px">
@@ -60,17 +83,19 @@
         @size-change="getRoleList"
       />
     </el-row>
-    <role-dialog :dialog-visible.sync="dialogVisible" @refreshList="getRoleList" />
+    <role-dialog ref="editRole" :dialog-visible.sync="dialogVisible" @refreshList="getRoleList" />
   </div>
 </template>
 
 <script>
-import { getRoleListAPI } from '@/api/setting'
+import { mapGetters } from 'vuex'
+import { getRoleListAPI, deleteRole, getCompanyInfo } from '@/api/setting'
 import roleDialog from './components/roleDialog.vue'
 export default {
   components: {
     roleDialog
   },
+
   data() {
     return {
       activeName: 'first',
@@ -81,21 +106,40 @@ export default {
         pagesize: 10
       },
       total: 0,
-      rolesList: []
+      rolesList: [],
+      companyInfo: {}
     }
+  },
+  computed: {
+    ...mapGetters(['companyId'])
   },
   created() {
     this.getRoleList()
+    this.getCompanyInfo()
   },
   methods: {
+    async getCompanyInfo() {
+      try {
+        const res = await getCompanyInfo(this.companyId)
+        this.companyInfo = res[0]
+        console.log(res)
+      } catch (error) {
+        // console.log('error')
+      }
+    },
     async getRoleList() {
       try {
         this.loading = true
         const { total, rows } = await getRoleListAPI(this.page)
         this.total = total
         this.rolesList = rows
+        // 解决方案：total 大于0 并且 rows的length === 0 这种情况并不是正在的没有数据 是有的，要重新发起请求
+        if (total > 0 && rows.length === 0) {
+          this.page.page--
+          this.getRoleList()
+        }
       } catch (error) {
-        console.log(error)
+        // console.log(error)
       } finally { this.loading = false }
     },
     handleAdd() {
@@ -103,6 +147,32 @@ export default {
     },
     handleClick(tab, event) {
       console.log(tab, event)
+    },
+    editRole(rows) {
+      this.$refs.editRole.formData = { ...rows }
+      this.dialogVisible = true
+    },
+    async deleRole(id) {
+      try {
+        await this.$confirm('Are you sure you want to delete', '提示', {
+          cancelButtonText: '取消',
+          confirmButtonText: '确定',
+          type: 'warning'
+        })
+        await deleteRole(id)
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+        this.getRoleList()
+        // console.log('confirm')
+      } catch (error) {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+        console.log('cancel')
+      }
     }
   }
 }

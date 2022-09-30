@@ -8,6 +8,19 @@
  * @param {string} cFormat
  * @returns {string | null}
  */
+export function tranListToTreeData(list, rootValue) {
+  const arr = []
+  list.forEach(item => {
+    if (item.pid === rootValue) {
+      const children = tranListToTreeData(list, item.id)
+      if (children.length) {
+        item.children = children
+      }
+      arr.push(item)
+    }
+  })
+  return arr
+}
 export function parseTime(time, cFormat) {
   if (arguments.length === 0 || !time) {
     return null

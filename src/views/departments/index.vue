@@ -10,10 +10,10 @@
     >
       <!-- el-tree里面的这个内容data 就是插槽内容 循环-->
       <!-- slot-scope是 tree组件传给每个节点的插槽的内容的数据-->
-      <tree-tools slot-scope="{ data }" :tree-node="data" @addDept="handelAddDept" />
+      <tree-tools slot-scope="{ data }" :tree-node="data" @refreshList="getDepartments" @addDept="handelAddDept" @editDept="handelEditDept" />
     </el-tree>
     <!-- 弹窗 -->
-    <add-dept :show-dialog.sync="showDialog" :current-node="currentNode" />
+    <add-dept ref="editDept" :show-dialog.sync="showDialog" :current-node="currentNode" />
   </div>
 </template>
 
@@ -50,6 +50,11 @@ export default {
     handelAddDept(node) {
       this.showDialog = true
       this.currentNode = node
+    },
+    handelEditDept(node) {
+      this.showDialog = true
+      this.currentNode = { ...node }
+      this.$refs.editDept.formData = { ...node }
     }
   }
 }

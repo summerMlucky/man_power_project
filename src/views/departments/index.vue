@@ -1,5 +1,5 @@
 <template>
-  <div class="departments-container">
+  <div v-loadding="loadding" class="departments-container">
     <el-card shadow="always">
       <tree-tools :tree-node="company" :is-root="false" @addDept="handelAddDept" />
     </el-card>
@@ -35,7 +35,8 @@ export default {
       },
       company: {},
       showDialog: false,
-      currentNode: {}
+      currentNode: {},
+      loadding: false
     }
   },
   created() {
@@ -43,9 +44,14 @@ export default {
   },
   methods: {
     async getDepartments() {
-      const { depts, companyName, companyManage } = await getDepartments()
-      this.departs = tranListToTreeData(depts, '')
-      this.company = { name: companyName, manager: companyManage, id: '' }
+      try {
+        this.loadding = true
+        const { depts, companyName, companyManage } = await getDepartments()
+        this.departs = tranListToTreeData(depts, '')
+        this.company = { name: companyName, manager: companyManage, id: '' }
+      } finally {
+        this.loadding = false
+      }
     },
     handelAddDept(node) {
       this.showDialog = true

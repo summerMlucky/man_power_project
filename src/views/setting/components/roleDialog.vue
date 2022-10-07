@@ -63,7 +63,6 @@ export default {
     async handleAdd() {
       try {
         this.$refs.roleDialogForm.validate()
-        console.log(this.formData)
         this.formData.id ? await updateRole(this.formData) : await addRole(this.formData)
         this.loadding = true
         this.$emit('refreshList')

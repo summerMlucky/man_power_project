@@ -121,8 +121,7 @@ export default {
     async getCompanyInfo() {
       try {
         const res = await getCompanyInfo(this.companyId)
-        this.companyInfo = res[0]
-        console.log(res)
+        this.companyInfo = res
       } catch (error) {
         // console.log('error')
       }

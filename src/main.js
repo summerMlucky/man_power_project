@@ -11,13 +11,14 @@ import '@/styles/index.scss' // global css
 import App from './App'
 import store from './store'
 import router from './router'
-
+import components from '@/components'
+Vue.use(components)
 import '@/icons' // icon
 import '@/permission' // permission control
-import * as imgErrors from '@/directives'
-Object.keys(imgErrors).forEach(ele => {
-  Vue.directive(ele, imgErrors[ele])
-})
+// import * as imgErrors from '@/directives'
+// Object.keys(imgErrors).forEach(ele => {
+//   Vue.directive(ele, imgErrors[ele])
+// })
 
 // set ElementUI lang to EN
 // Vue.use(ElementUI, { locale })

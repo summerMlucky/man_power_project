@@ -46,3 +46,37 @@ export function importEmployee(data) {
     data
   })
 }
+/**
+ * 保存员工个人信息
+ * @param {*} data
+ * @returns
+ */
+export function saveEmployeesInfo(data) {
+  return request({
+    url: `/employees/${data.userId}/personalInfo`,
+    method: 'PUT',
+    data
+  })
+}
+/**
+ * 获取员工岗位信息
+ * @param {*} id
+ * @returns
+ */
+export function getEmployeesJobInfo(id) {
+  return request({
+    url: `/employees/${id}/jobs`
+  })
+}
+/**
+ * 保存员工岗位信息
+ * @param {*} id
+ * @returns
+ */
+export function saveEmployeesJobInfo(data) {
+  return request({
+    url: `/employees/${data.userId}/jobs`,
+    method: 'PUT',
+    data
+  })
+}

@@ -1,5 +1,6 @@
 <template>
   <div class="user-info">
+    <i class="el-icon-printer" @click="$router.push('/employees/print/'+userId)" />
     <!-- 个人信息 -->
     <el-form label-width="220px">
       <!-- 工号 入职时间 -->
@@ -58,6 +59,7 @@
         <el-col :span="12">
           <el-form-item label="员工头像">
             <!-- 放置上传图片 -->
+            <uploadImg ref="updataAvatar" :default-url="employeesAvatar" @on-success="uploadAvatarSuccess" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -88,9 +90,9 @@
         </el-form-item>
         <!-- 个人头像 -->
         <!-- 员工照片 -->
-
         <el-form-item label="员工照片">
           <!-- 放置上传图片 -->
+          <uploadImg ref="updataPhotos" :default-url="employeesPic" @on-success="uploadPhotosSuccess" />
         </el-form-item>
         <el-form-item label="国家/地区">
           <el-select v-model="formData.nationalArea" class="inputW2">
@@ -386,14 +388,20 @@
 </template>
 
 <script>
+import uploadImg from '@/components/UploadImg/index.vue'
 import EmployeeEnum from '@/api/constant/employees'
 import { getDetailUserInfo, getEmployeeInfoById, saveUserDetailById } from '@/api/user'
 import { saveEmployeesInfo } from '@/api/employees'
 export default {
+  components: {
+    uploadImg
+  },
   data() {
     return {
       userId: this.$route.params.id,
       EmployeeEnum, // 员工枚举数据
+      employeesAvatar: '', // 员工头像
+      employeesPic: '', // 员工照片
       userInfo: {},
       formData: {
         userId: '',
@@ -468,26 +476,46 @@ export default {
     async  loadUserInfo() {
       const res = await getDetailUserInfo(this.userId)
       this.userInfo = res
+      if (res.staffPhoto) {
+        this.employeesAvatar = res.staffPhoto
+      }
     },
     async loadEmployeeInfo() {
       const res = await getEmployeeInfoById(this.userId)
       this.formData = res
+      if (res.staffPhoto) {
+        this.employeesPic = res.staffPhoto
+      }
+    },
+    async saveUserInfo() {
+      try {
+        if (this.$refs.updataAvatar.loading) {
+          return this.$message.error('头像还在上传中')
+        }
+        await saveUserDetailById(this.userInfo)
+        this.$message.success('用户信息保存成功')
+      } catch (error) {
+        this.$message.error('用户信息保存失败')
+      }
     },
     async saveEmployeesInfo() {
       try {
+        if (this.$refs.updataPhotos.loading) {
+          return this.$message.error('头像还在上传中')
+        }
         await saveEmployeesInfo(this.formData)
         this.$message.success('保存成功')
       } catch (error) {
         this.$message.error('保存失败')
       }
     },
-    async saveUserInfo() {
-      try {
-        await saveUserDetailById(this.userInfo)
-        this.$message.success('用户信息保存成功')
-      } catch (error) {
-        this.$message.error('用户信息保存失败')
-      }
+    // 监听头像上传成功
+    uploadAvatarSuccess(data) {
+      this.userInfo.staffPhoto = data.imgUrl
+    },
+    // 监听头像上传成功
+    uploadPhotosSuccess(data) {
+      this.formData.staffPhoto = data.imgUrl
     }
   }
 }

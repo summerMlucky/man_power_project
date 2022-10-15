@@ -2,7 +2,7 @@
   <div class="dashboard-container">
     <div class="dashboard-text">name: {{ name }}</div>
     <svg-icon icon-class="eye" />
-    <UploadImg />
+    <UploadImg @on-success="onSuccess1" />
   </div>
 </template>
 
@@ -15,6 +15,16 @@ export default {
     ...mapGetters([
       'name'
     ])
+  },
+  methods: {
+    onSuccess1(val) {
+      console.log(val)
+      console.log('onSuccess1', val)
+    },
+    onSuccess2(val) {
+      console.log(val)
+      console.log('onSuccess2', val)
+    }
   }
 
 }

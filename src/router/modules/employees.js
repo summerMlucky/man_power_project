@@ -15,5 +15,10 @@ export default {
     path: '/employees/detail/:id',
     component: () => import('@/views/employees/components/detail.vue'),
     hidden: true // 不在左侧菜单显示
+  },
+  {
+    path: 'print/:id',
+    component: () => import('@/views/employees/components/print.vue'),
+    hidden: true // 不在左侧菜单显示
   }]
 }

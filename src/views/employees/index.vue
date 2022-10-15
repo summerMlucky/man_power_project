@@ -31,6 +31,19 @@
       <el-table v-loading="loading" border :data="list">
         <el-table-column label="序号" sortable="" width="80" type="index" />
         <el-table-column label="姓名" prop="username" />
+        <el-table-column label="头像">
+          <template slot-scope="{row}">
+            <img
+              :src="row.staffPhoto"
+              alt=""
+              style="border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            padding: 10px;"
+              @click="genQrCode(row.staffPhoto)"
+            >
+          </template>
+        </el-table-column>
         <el-table-column label="工号" prop="workNumber" />
         <el-table-column label="聘用形式" prop="formOfEmployment" :formatter="formatEmployment" />
         <el-table-column label="部门" prop="departmentName" />
@@ -69,6 +82,17 @@
           @size-change="getEmployeeList"
         />
       </el-row>
+      <!-- 二维码弹出框 -->
+      <el-dialog
+        title="图片二维码"
+        :visible.sync="QrCodeDialogVisible"
+        width="30%"
+      >
+        <el-row type="flex" justify="center">
+          <!-- 1.懒渲染：内容默认没有创建，弹层显示的时候才创建 -->
+          <canvas ref="canvas" />
+        </el-row>
+      </el-dialog>
     </el-card>
     <add-employee :dialog-visible.sync="showDialog" />
   </div>
@@ -79,6 +103,7 @@ import AddEmployee from './components/add-employees.vue'
 import PageTools from '@/components/PageTools'
 import { getEmployeeList, delEmployee } from '@/api/employees'
 import employeesType from '@/api/constant/employees'
+import QRCode from 'qrcode'
 export default {
   components: {
     PageTools,
@@ -89,6 +114,7 @@ export default {
       showDialog: false,
       loading: false,
       showBefore: true,
+      QrCodeDialogVisible: false,
       page: {
         page: 1, // 当前页码
         size: 10
@@ -102,6 +128,23 @@ export default {
     this.getEmployeeList()
   },
   methods: {
+    genQrCode(staffPhoto) {
+      // 2.vue数据驱动/组件系统
+      // 数据驱动：数据变化=>视图变化
+      // 数据变化同步=>vue背后 将视图更新（异步的）
+      // 为什么？如果是同步，数据变则视图立即变 太消耗性能
+      // 等所有数据变化了，更新视图
+      console.log(staffPhoto)
+      if (!staffPhoto) return this.$message.error('暂无头像')
+      this.QrCodeDialogVisible = true
+      // 方法：等视图更新后触发，获取到最新的视图
+      this.$nextTick(() => {
+        QRCode.toCanvas(this.$refs.canvas, staffPhoto, function(error) {
+          if (error) console.error(error)
+          console.log('success!')
+        })
+      })
+    },
     goDetail(row) {
       this.$router.push('/employees/detail/' + row.id)
     },

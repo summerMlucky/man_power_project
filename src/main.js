@@ -13,6 +13,8 @@ import store from './store'
 import router from './router'
 import components from '@/components'
 Vue.use(components)
+import Print from 'vue-print-nb'
+Vue.use(Print)
 import '@/icons' // icon
 import '@/permission' // permission control
 // import * as imgErrors from '@/directives'

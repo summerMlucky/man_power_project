@@ -31,7 +31,7 @@
               width="240"
             >
               <template slot-scope="{row}">
-                <el-button size="small" type="success">分配权限</el-button>
+                <el-button size="small" type="success" @click="showSetPermission(row.id)">分配权限</el-button>
                 <el-button size="small" type="primary" @click="editRole(row)">编辑</el-button>
                 <el-button size="small" type="danger" @click="deleRole(row.id)">删除</el-button>
               </template>
@@ -84,6 +84,8 @@
       />
     </el-row>
     <role-dialog ref="editRole" :dialog-visible.sync="dialogVisible" @refreshList="getRoleList" />
+    <!-- 分配权限弹窗 -->
+    <set-permission :dialog-visible.sync="dialogVisibleSetPermission" :roles-id="currentRoleId" />
   </div>
 </template>
 
@@ -91,16 +93,19 @@
 import { mapGetters } from 'vuex'
 import { getRoleListAPI, deleteRole, getCompanyInfo } from '@/api/setting'
 import roleDialog from './components/roleDialog.vue'
+import SetPermission from './components/setPermission.vue'
 export default {
   components: {
-    roleDialog
+    roleDialog,
+    SetPermission
   },
-
   data() {
     return {
       activeName: 'first',
       loading: false,
       dialogVisible: false,
+      dialogVisibleSetPermission: false,
+      currentRoleId: '',
       page: {
         page: 1,
         pagesize: 10
@@ -118,12 +123,17 @@ export default {
     this.getCompanyInfo()
   },
   methods: {
+    // 点击分配权限
+    showSetPermission(id) {
+      this.dialogVisibleSetPermission = true
+      this.currentRoleId = id
+    },
     async getCompanyInfo() {
       try {
         const res = await getCompanyInfo(this.companyId)
         this.companyInfo = res
       } catch (error) {
-        // console.log('error')
+        console.log('error')
       }
     },
     async getRoleList() {

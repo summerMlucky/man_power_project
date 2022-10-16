@@ -65,7 +65,7 @@
             <el-button type="text" size="small">转正</el-button>
             <el-button type="text" size="small">调岗</el-button>
             <el-button type="text" size="small">离职</el-button>
-            <el-button type="text" size="small">角色</el-button>
+            <el-button type="text" size="small" @click="showSetRole(row.id)">角色</el-button>
             <el-button type="text" size="small" @click="delBtn(row.id)">删除</el-button>
           </template>
         </el-table-column>
@@ -95,26 +95,32 @@
       </el-dialog>
     </el-card>
     <add-employee :dialog-visible.sync="showDialog" />
+    <!-- 分配权限弹出框 -->
+    <AssignRole :dialog-visible.sync="dialogVisibleSetRole" :user-id="currentId" />
   </div>
 </template>
 
 <script>
 import AddEmployee from './components/add-employees.vue'
 import PageTools from '@/components/PageTools'
+import AssignRole from '@/views/employees/components/assign-role'
 import { getEmployeeList, delEmployee } from '@/api/employees'
 import employeesType from '@/api/constant/employees'
 import QRCode from 'qrcode'
 export default {
   components: {
     PageTools,
-    AddEmployee
+    AddEmployee,
+    AssignRole
   },
   data() {
     return {
+      dialogVisibleSetRole: false,
       showDialog: false,
       loading: false,
       showBefore: true,
       QrCodeDialogVisible: false,
+      currentId: '',
       page: {
         page: 1, // 当前页码
         size: 10
@@ -128,7 +134,16 @@ export default {
     this.getEmployeeList()
   },
   methods: {
+    // 点击分配角色
+    showSetRole(id) {
+      this.dialogVisibleSetRole = true
+      this.currentId = id
+    },
     genQrCode(staffPhoto) {
+      // 当QrCodeDialogVisible数据更新，此时视图还没有创建出来（数据更新同步，视图更新异步）
+      // 那等到视图更新完后，this.$refs.canvas为什么还是获取不到?
+      // 因为只在created() 里调用了一次
+
       // 2.vue数据驱动/组件系统
       // 数据驱动：数据变化=>视图变化
       // 数据变化同步=>vue背后 将视图更新（异步的）

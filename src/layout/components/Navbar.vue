@@ -8,6 +8,7 @@
     <!-- <breadcrumb class="breadcrumb-container" /> -->
 
     <div class="right-menu">
+      <ScreenFull />
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img v-imgError="defaultImg" :src="staffPhoto" class="user-avatar">
@@ -116,6 +117,7 @@ export default {
   }
 
   .right-menu {
+    display: flex;
     float: right;
     height: 100%;
     line-height: 50px;

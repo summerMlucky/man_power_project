@@ -3,6 +3,9 @@ export default {
   path: '/setting',
   name: '/setting',
   component: Layout,
+  meta: {
+    id: 'settings'
+  },
   children: [{
     path: '',
     component: () => import('@/views/setting/index.vue'),

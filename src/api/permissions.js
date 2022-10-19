@@ -8,3 +8,26 @@ export function getPermissions() {
     url: '/sys/permission'
   })
 }
+/**
+ * 添加权限点
+ * @param {*} data
+ * @returns
+ */
+export function addPermissions(data) {
+  return request({
+    url: '/sys/permission',
+    method: 'POST',
+    data
+  })
+}
+/**
+ * 根据id删除权限点
+ * @param {*} id
+ * @returns
+ */
+export function deletePermissions(id) {
+  return request({
+    url: '/sys/permission/' + id,
+    method: 'DELETE'
+  })
+}

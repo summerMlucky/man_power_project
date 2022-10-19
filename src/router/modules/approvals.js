@@ -3,6 +3,9 @@ export default {
   path: '/approvals',
   name: '/approvals',
   component: Layout,
+  meta: {
+    id: 'approvals'
+  },
   children: [{
     path: '',
     component: () => import('@/views/approvals/index.vue'),

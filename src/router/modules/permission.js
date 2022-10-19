@@ -3,6 +3,9 @@ export default {
   path: '/permission',
   name: '/permission',
   component: Layout,
+  meta: {
+    id: 'permission'
+  },
   children: [{
     path: '',
     component: () => import('@/views/permission/index.vue'),

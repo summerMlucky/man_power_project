@@ -3,6 +3,9 @@ export default {
   path: '/attendances',
   name: '/attendances',
   component: Layout,
+  meta: {
+    id: 'attendances'
+  },
   children: [{
     path: '',
     component: () => import('@/views/attendances/index.vue'),

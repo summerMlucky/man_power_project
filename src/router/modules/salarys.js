@@ -3,6 +3,9 @@ export default {
   path: '/salarys',
   name: '/salarys',
   component: Layout,
+  meta: {
+    id: 'salarys'
+  },
   children: [{
     path: '',
     component: () => import('@/views/salarys/index.vue'),

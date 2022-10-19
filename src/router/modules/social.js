@@ -3,6 +3,9 @@ export default {
   path: '/social',
   name: '/social',
   component: Layout,
+  meta: {
+    id: 'social'
+  },
   children: [{
     path: '',
     component: () => import('@/views/social/index.vue'),

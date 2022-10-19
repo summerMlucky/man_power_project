@@ -1,5 +1,6 @@
 import router from '@/router'
 import store from '@/store'
+import { asyncRoutes } from '@/router'
 const whiteList = ['/login', '/404']
 router.beforeEach(async(to, from, next) => {
   //   console.log(to)
@@ -11,7 +12,21 @@ router.beforeEach(async(to, from, next) => {
   // 判断一下 是否处于白名单 是的话 直接留在 当前页 否则 跳转到登录页
   if (store.getters.token) { // 已经登陆
     if (!store.getters.userId) {
-      await store.dispatch('user/getUserInfo')
+      // store.dispatch 返回值是Promise
+      const roles = await store.dispatch('user/getUserInfo')
+      // 1.动态路由的筛选在这个位置上写代码
+      // 所有动态路由asyncRoutes   router/index.js
+      const filterRouter = asyncRoutes.filter(item => {
+        return roles.menus.includes(item.meta.id)
+      })
+      router.addRoutes([...filterRouter, { path: '*', redirect: '/404', hidden: true }])
+      // 动态添加的路由规则，后续的next必须是next(to.path)
+      next(to.path)
+      store.commit('permission/setRouters', filterRouter)
+      console.log(filterRouter)
+      // console.log(asyncRoutes)
+      // 2.当前用户角色拥有的权限 user/getUserInfo return 出来
+      console.log(roles)
     }
     // await store.dispatch('user/getUserInfo')
     if (to.path === '/login') {

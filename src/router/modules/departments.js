@@ -3,6 +3,9 @@ export default {
   path: '/departments',
   name: '/departments',
   component: Layout,
+  meta: {
+    id: 'departments'
+  },
   children: [{
     path: '',
     component: () => import('@/views/departments/index.vue'),

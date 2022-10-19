@@ -10,7 +10,7 @@
         <span>共{{ total }}条记录</span>
       </template>
       <template #after>
-        <el-button size="small" type="warning" @click="$router.push('/import')">导入</el-button>
+        <el-button size="small" :disabled="isHasPression('employee-import')" type="warning" @click="$router.push('/import')">导入</el-button>
         <el-button size="small" type="danger" @click="exportExcel">导出</el-button>
         <el-button size="small" type="primary" @click="handleAdd">新增员工</el-button>
       </template>
@@ -61,7 +61,7 @@
         </el-table-column>
         <el-table-column label="操作" fixed="right" width="280">
           <template slot-scope="{row}">
-            <el-button type="text" size="small" @click="goDetail(row)">查看</el-button>
+            <el-button type="text" size="small" :disabled="isHasPression('employee-look')" @click="goDetail(row)">查看</el-button>
             <el-button type="text" size="small">转正</el-button>
             <el-button type="text" size="small">调岗</el-button>
             <el-button type="text" size="small">离职</el-button>
@@ -107,12 +107,14 @@ import AssignRole from '@/views/employees/components/assign-role'
 import { getEmployeeList, delEmployee } from '@/api/employees'
 import employeesType from '@/api/constant/employees'
 import QRCode from 'qrcode'
+import mixBtnPermission from '@/mixins/btnPermission'
 export default {
   components: {
     PageTools,
     AddEmployee,
     AssignRole
   },
+  mixins: [mixBtnPermission],
   data() {
     return {
       dialogVisibleSetRole: false,

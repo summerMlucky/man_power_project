@@ -4,7 +4,7 @@
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="角色管理" name="first">
           <el-row style="height:60px">
-            <el-button v-isHas="'role-add'" type="primary" size="small" icon="el-icon-plus" style="margin-left:10px;" @click="handleAdd">新增角色</el-button>
+            <el-button type="primary" size="small" :disabled="isHasPression('role-add')" icon="el-icon-plus" style="margin-left:10px;" @click="handleAdd">新增角色</el-button>
           </el-row>
 
           <el-table
@@ -31,9 +31,9 @@
               width="240"
             >
               <template slot-scope="{row}">
-                <el-button v-isHas="'role-assign'" size="small" type="success" @click="showSetPermission(row.id)">分配权限</el-button>
-                <el-button v-isHas="'role-edit'" size="small" type="primary" @click="editRole(row)">编辑</el-button>
-                <el-button v-isHas="'role-delete'" size="small" type="danger" @click="deleRole(row.id)">删除</el-button>
+                <el-button size="small" type="success" :disabled="isHasPression('role-assign')" @click="showSetPermission(row.id)">分配权限</el-button>
+                <el-button size="small" type="primary" :disabled="isHasPression('role-edit')" @click="editRole(row)">编辑</el-button>
+                <el-button size="small" type="danger" :disabled="isHasPression('role-delete')" @click="deleRole(row.id)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -94,11 +94,13 @@ import { mapGetters } from 'vuex'
 import { getRoleListAPI, deleteRole, getCompanyInfo } from '@/api/setting'
 import roleDialog from './components/roleDialog.vue'
 import SetPermission from './components/setPermission.vue'
+import mixBtnPermission from '@/mixins/btnPermission'
 export default {
   components: {
     roleDialog,
     SetPermission
   },
+  mixins: [mixBtnPermission],
   data() {
     return {
       activeName: 'first',

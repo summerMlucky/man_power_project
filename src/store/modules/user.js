@@ -1,5 +1,6 @@
 import { login } from '@/api/login'
 import { getUserInfo, getDetailUserInfo } from '@/api/user'
+import { resetRouter } from '@/router'
 export default {
   namespaced: true,
   state: {
@@ -32,14 +33,19 @@ export default {
     },
     async getUserInfo({ commit }) {
       const res = await getUserInfo()
+      // 制造一些假数据
+      const points = ['role-add', 'role-assign', 'role-delete']
+      res.roles.points = points
       const res1 = await getDetailUserInfo(res.userId)
       const result = { ...res, ...res1 }
       commit('SET_USER_INFO', result)
-      return JSON.parse(JSON.stringify(result))
+      // return JSON.parse(JSON.stringify(result))
+      return res.roles
     },
     logout({ commit }) {
       commit('REMOVE_USER_INFO')
       commit('REMOVE_TOKEN')
+      resetRouter()
     }
   }
 }
